@@ -6,7 +6,7 @@ function Client(document) {
   this.remotePlayerInterpolators = new Collection
   this.connection = new Connection(this.state, this.remotePlayerInterpolators)
   var keyboard = new Keyboard(document)
-  this.commandDispatcher = new CommandDispatcher(keyboard, this.connection, this.state)
+  this.commandManager = new CommandManager(keyboard, this.connection, this.state)
 }
 
 Client.prototype = {
@@ -14,10 +14,15 @@ Client.prototype = {
     this.scheduleNextTick()
   },
   update: function(timeDelta) {
-    if(this.state.player) this.commandDispatcher.update(timeDelta)
+    // should probably be replaced with a event driven approach?
+    if(this.state.player && !this.commandManager.started) this.commandManager.start(this.state.player)
+
+    if(this.commandManager.started) this.commandManager.update(timeDelta)
+
     this.remotePlayerInterpolators.forEach(function(remotePlayerInterpolator) {
       remotePlayerInterpolator.update(timeDelta)
     })
+
     this.view.update(timeDelta)
   },
   tick: function(timestamp) {

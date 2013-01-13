@@ -1,31 +1,25 @@
-function CommandDispatcher(keyboard, connection, state) {
-  this.state = state
+function CommandManager(keyboard, connection) {
   this.connection = connection
   this.keyboard = keyboard
-  this.dispatchInterval = 1000
-  this.timeUntilNextDispatch = this.dispatchInterval
-  this.commands = []
   this.nextId = 1
 }
 
-CommandDispatcher.prototype = {
+CommandManager.prototype = {
+  start: function(player) {
+    this.dispatcher = new CommandDispatcher(this.connection)
+    this.applicator = new CommandApplicator(player)
+    this.connection.commandApplicator = this.applicator
+    this.started = true
+  },
   update: function(timeDelta) {
     var command = this.queryCommand(timeDelta)
+
     if(command) {
-      this.commands.push(command)
-      this.state.player.applyCommandAndSaveState(command)
+      this.dispatcher.add(command)
+      this.applicator.add(command)
     }
-    this.timeUntilNextDispatch -= timeDelta
-    if(this.timeUntilNextDispatch <= 0) {
-      this.dispatch()
-      this.timeUntilNextDispatch += this.dispatchInterval
-    }
-  },
-  dispatch: function() {
-    if(this.commands.length != 0) {
-      this.connection.sendCommands(this.commands)
-      this.commands = []
-    }
+
+    this.dispatcher.update(timeDelta)
   },
   queryCommand: function(timeDelta) {
     var keysPressed = []

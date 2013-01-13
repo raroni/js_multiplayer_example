@@ -1,9 +1,10 @@
-function Connection(state, remotePlayerInterpolators) {
+function Connection(state, remotePlayerInterpolators, commandApplicator) {
   this.socket = new WebSocket('ws://localhost:3000')
   this.socket.onmessage = this.onMessage.bind(this)
   this.world = state.world
   this.state = state
   this.remotePlayerInterpolators = remotePlayerInterpolators
+  this.commandApplicator = commandApplicator
 }
 
 Connection.prototype = {
@@ -22,8 +23,7 @@ Connection.prototype = {
     this.socket.send(messageAsString)
   },
   onNewPlayerMessage: function(message) {
-    var PlayerConstructor = message.you ? LocalPlayer : Player
-    var player = new PlayerConstructor(message.player)
+    var player = new Player(message.player)
     this.world.players.add(player)
     if(message.you) {
       this.state.player = player
@@ -34,7 +34,7 @@ Connection.prototype = {
     }
   },
   onCommandAcknowledgementMessage: function(message) {
-    this.state.player.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId)
+    this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId)
   },
   onSnapshotMessage: function(message) {
     var playerData = message.snapshot
