@@ -2,7 +2,7 @@ function CommandDispatcher(keyboard, connection, state) {
   this.state = state
   this.connection = connection
   this.keyboard = keyboard
-  this.dispatchInterval = 1000 // Er CommandDispatch bedre navngivning?
+  this.dispatchInterval = 1000
   this.timeUntilNextDispatch = this.dispatchInterval
   this.commands = []
   this.nextId = 1
