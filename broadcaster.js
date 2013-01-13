@@ -4,7 +4,7 @@ function Broadcaster(world, streamingServer) {
   world.players.on('new', this.newPlayer.bind(this))
   world.players.on('remove', this.removePlayer.bind(this))
   this.streamingServer = streamingServer
-  setInterval(this.performSnapshot.bind(this), 500)
+  setInterval(this.performSnapshot.bind(this), 100)
 }
 
 Broadcaster.prototype = {

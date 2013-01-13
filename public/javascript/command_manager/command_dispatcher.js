@@ -1,7 +1,7 @@
 function CommandDispatcher(connection) {
   this.resetQueue()
   this.connection = connection
-  this.interval = 1000
+  this.interval = 100
   this.timeUntilNextDispatch = this.interval
 }
 
