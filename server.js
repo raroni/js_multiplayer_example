@@ -13,8 +13,9 @@ function Server() {
 
 Server.prototype = {
   start: function() {
-    this.httpServer.listen(3000)
-    console.log('Listening on port 3000')
+    var port = process.env.PORT || 3000
+    this.httpServer.listen(port)
+    console.log('Listening on port ' + port)
     setInterval(this.tick.bind(this), 33)
     console.log('Starting game loop.')
   },
