@@ -1,8 +1,9 @@
-function Connection(state) {
+function Connection(state, remotePlayerInterpolators) {
   this.socket = new WebSocket('ws://localhost:3000')
   this.socket.onmessage = this.onMessage.bind(this)
   this.world = state.world
   this.state = state
+  this.remotePlayerInterpolators = remotePlayerInterpolators
 }
 
 Connection.prototype = {
@@ -24,7 +25,13 @@ Connection.prototype = {
     var PlayerConstructor = message.you ? LocalPlayer : Player
     var player = new PlayerConstructor(message.player)
     this.world.players.add(player)
-    if(message.you) this.state.player = player
+    if(message.you) {
+      this.state.player = player
+    } else {
+      var remotePlayerInterpolator = new RemotePlayerInterpolator(player)
+      remotePlayerInterpolator.id = player.id
+      this.remotePlayerInterpolators.add(remotePlayerInterpolator)
+    }
   },
   onCommandAcknowledgementMessage: function(message) {
     this.state.player.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId)
@@ -33,11 +40,8 @@ Connection.prototype = {
     var playerData = message.snapshot
     playerData.forEach(function(playerData) {
       if(!this.state.player || playerData.id != this.state.player.id) {
-        var player = this.world.players.byId[playerData.id]
-        if(player) {
-          player.position.x = playerData.position.x
-          player.position.y = playerData.position.y
-        }
+        var interpolator = this.remotePlayerInterpolators.byId[playerData.id]
+        if(interpolator) interpolator.receive(playerData)
       }
     }.bind(this))
   },
@@ -52,5 +56,8 @@ Connection.prototype = {
   onRemovePlayerMessage: function(message) {
     var player = this.world.players.byId[message.playerId]
     this.world.players.remove(player)
+
+    var interpolator = this.remotePlayerInterpolators.byId[message.playerId]
+    this.remotePlayerInterpolators.remove(interpolator)
   }
 }

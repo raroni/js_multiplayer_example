@@ -3,7 +3,8 @@ function Client(document) {
   this.state = { world: world }
 
   this.view = new View(world, document)
-  this.connection = new Connection(this.state)
+  this.remotePlayerInterpolators = new Collection
+  this.connection = new Connection(this.state, this.remotePlayerInterpolators)
   var keyboard = new Keyboard(document)
   this.commandDispatcher = new CommandDispatcher(keyboard, this.connection, this.state)
 }
@@ -14,6 +15,9 @@ Client.prototype = {
   },
   update: function(timeDelta) {
     if(this.state.player) this.commandDispatcher.update(timeDelta)
+    this.remotePlayerInterpolators.forEach(function(remotePlayerInterpolator) {
+      remotePlayerInterpolator.update(timeDelta)
+    })
     this.view.update(timeDelta)
   },
   tick: function(timestamp) {
