@@ -7,9 +7,9 @@
   function Player(options) {
     if(options.id)
       this.id = options.id
-      if(options.name)
-        this.name = options.name
-    if(options.position) 
+    if(options.name)
+      this.name = options.name
+    if(options.position)
       this.position = new Vector2(options.position.x, options.position.y)
   }
 
