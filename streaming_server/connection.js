@@ -1,37 +1,37 @@
-var Player = require('../models/player')
-var EventEmitter = require('events').EventEmitter
+var Player = require('../models/player');
+var EventEmitter = require('events').EventEmitter;
 
 function Connection(wsConnection, world) {
-  EventEmitter.call(this)
-  console.log((new Date()) + ' Connection accepted.')
-  wsConnection.on('message', this.onMessage.bind(this))
-  wsConnection.on('close', this.onClose.bind(this))
-  this.wsConnection = wsConnection
-  this.world = world
+  EventEmitter.call(this);
+  console.log((new Date()) + ' Connection accepted.');
+  wsConnection.on('message', this.onMessage.bind(this));
+  wsConnection.on('close', this.onClose.bind(this));
+  this.wsConnection = wsConnection;
+  this.world = world;
   world.players.forEach(function(player) {
-    this.sendNewPlayerMessage(player)
-  }.bind(this))
+    this.sendNewPlayerMessage(player);
+  }.bind(this));
 }
 
-Connection.prototype = Object.create(EventEmitter.prototype)
+Connection.prototype = Object.create(EventEmitter.prototype);
 
 Connection.prototype.createPlayer = function() {
-  this.player = new Player
-  this.player.on('commandApplication', this.sendCommandAcknowledgementMessage.bind(this))
-  this.world.players.add(this.player)
-}
+  this.player = new Player;
+  this.player.on('commandApplication', this.sendCommandAcknowledgementMessage.bind(this));
+  this.world.players.add(this.player);
+};
 
 Connection.prototype.onMessage = function(messageObject) {
   if(messageObject.type === 'utf8') {
-    var messageAsString = messageObject.utf8Data
-    var message = JSON.parse(messageAsString)
+    var messageAsString = messageObject.utf8Data;
+    var message = JSON.parse(messageAsString);
     if(message.type == 'commands')
-      this.player.commands = this.player.commands.concat(message.commands)
+      this.player.commands = this.player.commands.concat(message.commands);
   }
-}
+};
 
 Connection.prototype.sendNewPlayerMessage = function(player, you) {
-  if(typeof(you) === 'undefined') you = false
+  if(typeof(you) === 'undefined') you = false;
   var message = {
     type: 'newPlayer',
     you: you,
@@ -43,29 +43,29 @@ Connection.prototype.sendNewPlayerMessage = function(player, you) {
         y: player.position.y
       }
     }
-  }
+  };
 
-  this.sendMessage(message)
-}
+  this.sendMessage(message);
+};
 
 Connection.prototype.onClose = function(reasonCode, description) {
-  console.log((new Date()) + ' Peer ' + this.wsConnection.remoteAddress + ' disconnected.')
-  this.emit('close')
-  this.world.players.remove(this.player)
-}
+  console.log((new Date()) + ' Peer ' + this.wsConnection.remoteAddress + ' disconnected.');
+  this.emit('close');
+  this.world.players.remove(this.player);
+};
 
 Connection.prototype.sendMessage = function(message) {
-  var messageAsString = JSON.stringify(message)
-  this.wsConnection.sendUTF(messageAsString)
-}
+  var messageAsString = JSON.stringify(message);
+  this.wsConnection.send(messageAsString);
+};
 
 Connection.prototype.sendSnapshot = function(snapshot) {
   var message = {
     type: 'snapshot',
     snapshot: snapshot
-  }
-  this.sendMessage(message)
-}
+  };
+  this.sendMessage(message);
+};
 
 Connection.prototype.sendCommandAcknowledgementMessage = function() {
   var message = {
@@ -77,8 +77,8 @@ Connection.prototype.sendCommandAcknowledgementMessage = function() {
       }
     },
     lastAcknowledgedCommandId: this.player.lastAppliedCommandId
-  }
-  this.sendMessage(message)
-}
+  };
+  this.sendMessage(message);
+};
 
-module.exports = Connection
+module.exports = Connection;

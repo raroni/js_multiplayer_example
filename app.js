@@ -1,3 +1,3 @@
-var Server = require('./server')
-var server = new Server
-server.start()
+var Server = require('./server');
+var server = new Server;
+server.start();
