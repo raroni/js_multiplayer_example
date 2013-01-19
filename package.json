@@ -7,6 +7,9 @@
     "node-static": "0.6.7",
     "websocket": "1.0.8"
   },
+  "devDependencies": {
+    "snitch": "0.0.1"
+  }
   "engines": {
     "node": "0.8.x",
     "npm":  "1.1.x"
