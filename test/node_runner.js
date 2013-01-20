@@ -1,7 +1,7 @@
 var Snitch = require('snitch');
 
 var paths = [
-  'test_case_test'
+  'transcoder_test'
 ];
 
 var options = {
