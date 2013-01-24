@@ -4,8 +4,9 @@ Det kunne være sejt hvis View lyttede på world.players-events (add/remove) og 
 Så kunne man i View#update bare kalde noget i stil med view.playersView.each(&:update) :-D
 */
 
-function View(world, document) {
-  this.world = world;
+function View(state, document) {
+  this.state = state;
+  this.world = state.world;
   this.canvas = document.createElement('canvas');
   this.canvas.width = 500;
   this.canvas.height = 200;
@@ -18,7 +19,18 @@ View.prototype = {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.world.players.forEach(function(player) {
       this.context.fillRect(player.position.x, player.position.y, 20, 20);
+      this.context.font = '13px arial';
       this.context.fillText(player.name, player.position.x, player.position.y+30);
     }.bind(this));
+
+    var text = 'Incoming network: ';
+    if(this.state.networkAnalyzer.rate) {
+      text += this.state.networkAnalyzer.rate + 'b/s';
+    } else {
+      text += 'N/A';
+    }
+    this.context.fillStyle = '000';
+    this.context.font = '14px arial';
+    this.context.fillText(text, 0, 13);
   }
 };
