@@ -1,5 +1,6 @@
 function Connection(state, remotePlayerInterpolators, commandApplicator) {
   this.socket = new WebSocket('ws://localhost:3000');
+  this.socket.binaryType = "arraybuffer";
   this.socket.onmessage = this.onMessage.bind(this);
   this.world = state.world;
   this.state = state;
@@ -8,8 +9,14 @@ function Connection(state, remotePlayerInterpolators, commandApplicator) {
 }
 
 Connection.prototype = {
-  onMessage: function(messageObject) {
-    var message = JSON.parse(messageObject.data);
+  onMessage: function(messageEvent) {
+    var message;
+    if(messageEvent.data instanceof ArrayBuffer) {
+      message = Transcoder.decode(messageEvent.data);
+      console.log(message);
+    } else {
+      message = JSON.parse(messageEvent.data);
+    }
     if(!message.type) throw new Error('Message from server had no type.');
     var type = message.type;
     var methodName = 'on' + type.charAt(0).toUpperCase() + type.slice(1) + 'Message';

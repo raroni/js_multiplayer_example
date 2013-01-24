@@ -1,5 +1,6 @@
 var Player = require('../models/player');
 var EventEmitter = require('events').EventEmitter;
+var Transcoder = require('../shared/transcoder');
 
 function Connection(wsConnection, world) {
   EventEmitter.call(this);
@@ -55,8 +56,15 @@ Connection.prototype.onClose = function(reasonCode, description) {
 };
 
 Connection.prototype.sendMessage = function(message) {
-  var messageAsString = JSON.stringify(message);
-  this.wsConnection.send(messageAsString);
+  var data;
+  if(Transcoder.canTranscode(message.type)) {
+    var arrayBuffer = Transcoder.encode(message);
+    data = convertArrayBufferToNodeBuffer(arrayBuffer);
+  } else {
+    data = JSON.stringify(message);
+  }
+
+  this.wsConnection.send(data);
 };
 
 Connection.prototype.sendSnapshot = function(snapshot) {
@@ -80,5 +88,14 @@ Connection.prototype.sendCommandAcknowledgementMessage = function() {
   };
   this.sendMessage(message);
 };
+
+function convertArrayBufferToNodeBuffer(arrayBuffer) {
+  var buffer = new Buffer(arrayBuffer.byteLength);
+  var view = new Uint8Array(arrayBuffer);
+  for(var i=0; buffer.length>i; i++) {
+    buffer[i] = view[i];
+  }
+  return buffer;
+}
 
 module.exports = Connection;

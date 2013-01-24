@@ -9,7 +9,13 @@
     decode: function(string) {
       var message = Transcoder.Decoder.decode(string);
       return message;
-    }
+    },
+    canTranscode: function(type) {
+      return Transcoder.types.indexOf(type) != -1
+    },
+    types: [
+      'commandAcknowledgement'
+    ]
   };
 
   if(isNode) {
