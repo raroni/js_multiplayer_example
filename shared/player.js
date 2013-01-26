@@ -5,27 +5,32 @@
   else Vector2 = window.Vector2;
 
   function Player(options) {
-    if(options.id)
-      this.id = options.id;
-    if(options.name)
-      this.name = options.name;
-    if(options.position)
-      this.position = new Vector2(options.position.x, options.position.y);
+    ['id', 'name', 'position_x', 'position_y'].forEach(function(key) {
+      if(options[key]) this[key] = options[key];
+    }.bind(this));
   }
 
   Player.prototype = {
     applyCommand: function(command) {
       if(command.left)
-        this.position.x -= 1
+        this.position_x -= 1
 
       if(command.right)
-        this.position.x += 1
+        this.position_x += 1
 
       if(command.up)
-        this.position.y -= 1
+        this.position_y -= 1
 
       if(command.down)
-        this.position.y += 1
+        this.position_y += 1
+    },
+    getPosition: function() {
+      var position = new Vector2(this.position_x, this.position_y);
+      return position;
+    },
+    setPosition: function(position) {
+      this.position_x = position.x;
+      this.position_y = position.y;
     }
   };
 

@@ -19,10 +19,8 @@
     var originalMessage = {
       type: 'commandAcknowledgement',
       state: {
-        position: {
-          x: 180,
-          y: 200
-        }
+        position_x: 180,
+        position_y: 200
       },
       lastAcknowledgedCommandId: 25
     };
@@ -32,8 +30,8 @@
 
     this.assertEqual(7, encodedMessage.byteLength);
     this.assertEqual(originalMessage.type, decodedMessage.type);
-    this.assertEqual(originalMessage.state.position.x, decodedMessage.state.position.x);
-    this.assertEqual(originalMessage.state.position.y, decodedMessage.state.position.y);
+    this.assertEqual(originalMessage.state.position_x, decodedMessage.state.position_x);
+    this.assertEqual(originalMessage.state.position_y, decodedMessage.state.position_y);
     this.assertEqual(originalMessage.lastAcknowledgedCommandId, decodedMessage.lastAcknowledgedCommandId);
   };
 

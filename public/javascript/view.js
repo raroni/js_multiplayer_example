@@ -18,9 +18,9 @@ View.prototype = {
   update: function(timeDelta) {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.world.players.forEach(function(player) {
-      this.context.fillRect(player.position.x, player.position.y, 20, 20);
+      this.context.fillRect(player.position_x, player.position_y, 20, 20);
       this.context.font = '13px arial';
-      this.context.fillText(player.name, player.position.x, player.position.y+30);
+      this.context.fillText(player.name, player.position_x, player.position_y+30);
     }.bind(this));
 
     var text = 'Incoming network: ';
