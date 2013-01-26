@@ -1,7 +1,8 @@
 var Snitch = require('snitch');
 
 var paths = [
-  'transcoder_test'
+  'transcoder_test',
+  'delta_generator_test'
 ];
 
 var options = {

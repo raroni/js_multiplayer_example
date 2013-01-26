@@ -8,7 +8,7 @@ World.prototype = Object.create(SharedWorld);
 World.prototype.update = function(timeDelta) {
   this.players.forEach(function(player) {
     player.applyCommands();
-  })
-}
+  });
+};
 
 module.exports = World;
