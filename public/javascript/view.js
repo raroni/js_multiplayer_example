@@ -25,7 +25,7 @@ View.prototype = {
 
     var text = 'Incoming network: ';
     if(this.state.networkAnalyzer.rate) {
-      text += this.state.networkAnalyzer.rate + 'b/s';
+      text += Math.round(this.state.networkAnalyzer.rate) + 'b/s';
     } else {
       text += 'N/A';
     }
