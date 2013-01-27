@@ -13,7 +13,7 @@ DeltaGeneratorTest.prototype['test change to one entity'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       }
     ]
@@ -23,7 +23,7 @@ DeltaGeneratorTest.prototype['test change to one entity'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 4
       }
     ]
@@ -49,13 +49,13 @@ DeltaGeneratorTest.prototype['test change to two entities'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       },
       {
         id: 2,
         name: 'John',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       }
     ]
@@ -65,13 +65,13 @@ DeltaGeneratorTest.prototype['test change to two entities'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 3
       },
       {
         id: 2,
         name: 'John',
-        health_points: 10,
+        healthPoints: 10,
         level: 1
       }
     ]
@@ -83,7 +83,7 @@ DeltaGeneratorTest.prototype['test change to two entities'] = function() {
     changes: {
       players: {
         1: { level: 2 },
-        2: { health_points: -10 }
+        2: { healthPoints: -10 }
       }
     }
   }
@@ -96,13 +96,13 @@ DeltaGeneratorTest.prototype['test entity removal'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       },
       {
         id: 2,
         name: 'John',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       }
     ]
@@ -112,7 +112,7 @@ DeltaGeneratorTest.prototype['test entity removal'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       }
     ]
@@ -134,7 +134,7 @@ DeltaGeneratorTest.prototype['test entity insertion'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       }
     ]
@@ -144,13 +144,13 @@ DeltaGeneratorTest.prototype['test entity insertion'] = function() {
       {
         id: 1,
         name: 'Rasmus',
-        health_points: 20,
+        healthPoints: 20,
         level: 1
       },
       {
         id: 2,
         name: 'John',
-        health_points: 10,
+        healthPoints: 10,
         level: 1
       }
     ]
@@ -164,7 +164,7 @@ DeltaGeneratorTest.prototype['test entity insertion'] = function() {
         {
           id: 2,
           name: 'John',
-          health_points: 10,
+          healthPoints: 10,
           level: 1
         }
       ]

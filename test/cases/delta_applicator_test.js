@@ -11,7 +11,7 @@
         {
           id: 1,
           name: 'Rasmus',
-          health_points: 20,
+          healthPoints: 20,
           level: 1
         }
       ]
@@ -33,7 +33,7 @@
         {
           id: 1,
           name: 'Rasmus',
-          health_points: 20,
+          healthPoints: 20,
           level: 4
         }
       ]
