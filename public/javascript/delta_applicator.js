@@ -8,7 +8,7 @@
   DeltaApplicator.prototype = {
     execute: function() {
       if(this.delta.changes) this.applyChanges();
-      if(this.delta.inserts) this.applyInserts();
+      if(this.delta.insertions) this.applyInsertions();
       if(this.delta.deletions) this.applyDeletions();
     },
     applyChanges: function() {
@@ -40,12 +40,12 @@
 
       entity[attributeKey] = newValue;
     },
-    applyInserts: function() {
-      var collectionInserts;
-      var inserts = this.delta.inserts;
-      for(var collectionKey in inserts) {
-        collectionInserts = inserts[collectionKey];
-        collectionInserts.forEach(function(entity) {
+    applyInsertions: function() {
+      var collectionInsertions;
+      var insertions = this.delta.insertions;
+      for(var collectionKey in insertions) {
+        collectionInsertions = insertions[collectionKey];
+        collectionInsertions.forEach(function(entity) {
           this.applyInsert(collectionKey, entity);
         }.bind(this));
       }

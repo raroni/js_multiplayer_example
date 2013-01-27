@@ -57,7 +57,7 @@
 
     var oldState = { players: [player1] };
     var delta = {
-      inserts: {
+      insertions: {
         players: [player2]
       }
     };
