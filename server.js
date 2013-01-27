@@ -11,7 +11,7 @@ var testPathMatcher = /^\/test/;
 function Server() {
   this.world = new World;
 
-  this.clientFilesServer = new StaticServer('./public');
+  this.clientFilesServer = new StaticServer('./client');
   this.sharedFilesServer = new StaticServer('./shared');
   this.testFilesServer = new StaticServer('./test');
 
