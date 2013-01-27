@@ -5,7 +5,7 @@
   else Vector2 = window.Vector2;
 
   function Player(options) {
-    ['id', 'name', 'position_x', 'position_y'].forEach(function(key) {
+    ['id', 'name', 'positionX', 'positionY'].forEach(function(key) {
       if(options[key]) this[key] = options[key];
     }.bind(this));
   }
@@ -13,24 +13,24 @@
   Player.prototype = {
     applyCommand: function(command) {
       if(command.left)
-        this.position_x -= 1
+        this.positionX -= 1
 
       if(command.right)
-        this.position_x += 1
+        this.positionX += 1
 
       if(command.up)
-        this.position_y -= 1
+        this.positionY -= 1
 
       if(command.down)
-        this.position_y += 1
+        this.positionY += 1
     },
     getPosition: function() {
-      var position = new Vector2(this.position_x, this.position_y);
+      var position = new Vector2(this.positionX, this.positionY);
       return position;
     },
     setPosition: function(position) {
-      this.position_x = position.x;
-      this.position_y = position.y;
+      this.positionX = position.x;
+      this.positionY = position.y;
     }
   };
 

@@ -17,8 +17,8 @@
 
       message.type = Transcoder.types[typeCode];
       message.state = {
-        position_x: view.getUint16(1),
-        position_y: view.getUint16(3)
+        positionX: view.getUint16(1),
+        positionY: view.getUint16(3)
       };
       message.lastAcknowledgedCommandId = view.getUint16(5);
       return message;

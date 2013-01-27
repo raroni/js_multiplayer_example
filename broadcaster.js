@@ -34,8 +34,8 @@ Broadcaster.prototype = {
     this.world.players.forEach(function(player) {
       var playerData = {
         id: player.id,
-        position_x: player.position_x,
-        position_y: player.position_y
+        positionX: player.positionX,
+        positionY: player.positionY
       };
       snapshot.push(playerData);
     })

@@ -13,8 +13,8 @@ function Player() {
   var x = Math.round(Math.random()*100);
   var y = Math.round(Math.random()*100);
   var options = {
-    position_x: x,
-    position_y: y,
+    positionX: x,
+    positionY: y,
     name: getName()
   };
   SharedPlayer.call(this, options);

@@ -17,6 +17,6 @@ RemotePlayerInterpolator.prototype = {
   receive: function(newPlayerData) {
     this.progress = 0;
     this.oldPosition = this.newPosition;
-    this.newPosition = new Vector2(newPlayerData.position_x, newPlayerData.position_y);
+    this.newPosition = new Vector2(newPlayerData.positionX, newPlayerData.positionY);
   }
 }

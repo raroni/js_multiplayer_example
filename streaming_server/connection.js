@@ -39,8 +39,8 @@ Connection.prototype.sendNewPlayerMessage = function(player, you) {
     player: {
       id: player.id,
       name: player.name,
-      position_x: player.position_x,
-      position_y: player.position_y
+      positionX: player.positionX,
+      positionY: player.positionY
     }
   };
 
@@ -77,8 +77,8 @@ Connection.prototype.sendCommandAcknowledgementMessage = function() {
   var message = {
     type: 'commandAcknowledgement',
     state: {
-      position_x: this.player.position_x,
-      position_y: this.player.position_y
+      positionX: this.player.positionX,
+      positionY: this.player.positionY
     },
     lastAcknowledgedCommandId: this.player.lastAppliedCommandId
   };

@@ -15,8 +15,8 @@
       var view = new DataView(buffer);
 
       view.setUint8(0, typeCode);
-      view.setUint16(1, message.state.position_x);
-      view.setUint16(3, message.state.position_y);
+      view.setUint16(1, message.state.positionX);
+      view.setUint16(3, message.state.positionY);
       view.setUint16(5, message.lastAcknowledgedCommandId);
 
       return buffer;

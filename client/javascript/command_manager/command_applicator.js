@@ -12,8 +12,8 @@ CommandApplicator.prototype = {
     while(this.unacknowledgedCommands.length && this.unacknowledgedCommands[0].id <= lastAcknowledCommandId)
       this.unacknowledgedCommands.shift();
 
-    this.player.position_x = state.position_x;
-    this.player.position_y = state.position_y;
+    this.player.positionX = state.positionX;
+    this.player.positionY = state.positionY;
     this.unacknowledgedCommands.forEach(this.player.applyCommand.bind(this.player));
   }
 };
