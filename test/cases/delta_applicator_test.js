@@ -41,5 +41,34 @@
     this.assertDeepEqual(expected, newState);
   }
 
+  DeltaApplicatorTest.prototype['test insert'] = function() {
+    var player1 = {
+      id: 1,
+      name: 'Rasmus',
+      healthPoints: 20,
+      level: 1
+    };
+    var player2 = {
+      id: 2,
+      name: 'John',
+      healthPoints: 30,
+      level: 2
+    };
+
+    var oldState = { players: [player1] };
+    var delta = {
+      inserts: {
+        players: [player2]
+      }
+    };
+
+    var newState = DeltaApplicator.apply(oldState, delta);
+
+    var expected = {
+      players: [player1, player2]
+    };
+    this.assertDeepEqual(expected, newState);
+  }
+
   window.DeltaApplicatorTest = DeltaApplicatorTest;
 })();

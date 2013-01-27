@@ -8,13 +8,15 @@
   DeltaApplicator.prototype = {
     execute: function() {
       if(this.delta.changes) this.applyChanges();
+      if(this.delta.inserts) this.applyInserts();
     },
     applyChanges: function() {
+      var collectionChanges, entity;
       var changes = this.delta.changes;
       for(var collectionKey in changes) {
-        var collectionChanges = changes[collectionKey];
+        collectionChanges = changes[collectionKey];
         for(var entityId in collectionChanges) {
-          var entity = DeltaHelper.findEntity(this.result[collectionKey], entityId);
+          entity = DeltaHelper.findEntity(this.result[collectionKey], entityId);
           for(var attributeKey in collectionChanges[entityId]) {
             this.applyChange(entity, attributeKey, collectionChanges[entityId][attributeKey]);
           }
@@ -22,7 +24,6 @@
       }
     },
     applyChange: function(entity, attributeKey, attributeChange) {
-      console.log(entity.id, attributeKey, attributeChange)
       var oldValue = entity[attributeKey];
       var type = typeof(oldValue);
       var newValue;
@@ -37,6 +38,19 @@
       }
 
       entity[attributeKey] = newValue;
+    },
+    applyInserts: function() {
+      var collectionInserts;
+      var inserts = this.delta.inserts;
+      for(var collectionKey in inserts) {
+        collectionInserts = inserts[collectionKey];
+        collectionInserts.forEach(function(entity) {
+          this.applyInsert(collectionKey, entity);
+        }.bind(this));
+      }
+    },
+    applyInsert: function(collectionKey, entity) {
+      this.result[collectionKey].push(entity);
     }
   };
 
