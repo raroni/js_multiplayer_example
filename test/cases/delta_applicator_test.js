@@ -39,7 +39,7 @@
       ]
     };
     this.assertDeepEqual(expected, newState);
-  }
+  };
 
   DeltaApplicatorTest.prototype['test insert'] = function() {
     var player1 = {
@@ -68,7 +68,7 @@
       players: [player1, player2]
     };
     this.assertDeepEqual(expected, newState);
-  }
+  };
 
   window.DeltaApplicatorTest = DeltaApplicatorTest;
 })();
