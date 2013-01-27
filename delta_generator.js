@@ -1,10 +1,4 @@
-function findEntity(collection, id) {
-  var entity;
-  for(var i=0; collection.length>i; i++) {
-    entity = collection[i];
-    if(entity.id == id) return entity;
-  }
-}
+var DeltaHelper = require('./shared/delta_helper');
 
 function DeltaGenerator(oldState, newState) {
   this.oldState = oldState;
@@ -23,7 +17,7 @@ DeltaGenerator.prototype = {
     var uncheckedNewEntities = this.newState[collectionKey];
 
     collection.forEach(function(oldEntity) {
-      var newEntity = findEntity(this.newState[collectionKey], oldEntity.id);
+      var newEntity = DeltaHelper.findEntity(this.newState[collectionKey], oldEntity.id);
       uncheckedNewEntities.splice(uncheckedNewEntities.indexOf(newEntity), 1);
       if(newEntity) {
         for(var attributeKey in newEntity) {
@@ -64,7 +58,7 @@ DeltaGenerator.prototype = {
     if(oldType != newType) throw new Error('Types does not match.');
     var type = oldType;
 
-    if(oldValue != newValue) { // this check might be made more sophisticated to check for nested variables (position.x, position.y)
+    if(oldValue != newValue) {
       var delta;
       switch(type) {
         case 'number':

@@ -4,3 +4,4 @@
 * Boundaries
 * Transcoder skal ikke hedde transcoder. Måske NetworkCompressor?
 * Would be awesome to be able to use player.position= instead of player.setPosition (via Object.defineProperty)
+* Overfvej at rename vores Applicators til Appliers
