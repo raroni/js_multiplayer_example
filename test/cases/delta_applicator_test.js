@@ -70,5 +70,43 @@
     this.assertDeepEqual(expected, newState);
   };
 
+  DeltaApplicatorTest.prototype['test delete'] = function() {
+    var oldState = {
+      players: [
+        {
+          id: 1,
+          name: 'Rasmus',
+          healthPoints: 20,
+          level: 1
+        },
+        {
+          id: 2,
+          name: 'John',
+          healthPoints: 20,
+          level: 1
+        }
+      ]
+    };
+    var delta = {
+      deletions: {
+        players: [2]
+      }
+    };
+
+    var newState = DeltaApplicator.apply(oldState, delta);
+
+    var expected = {
+      players: [
+        {
+          id: 1,
+          name: 'Rasmus',
+          healthPoints: 20,
+          level: 1
+        }
+      ]
+    };
+    this.assertDeepEqual(expected, newState);
+  };
+
   window.DeltaApplicatorTest = DeltaApplicatorTest;
 })();

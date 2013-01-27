@@ -9,15 +9,16 @@
     execute: function() {
       if(this.delta.changes) this.applyChanges();
       if(this.delta.inserts) this.applyInserts();
+      if(this.delta.deletions) this.applyDeletions();
     },
     applyChanges: function() {
-      var collectionChanges, entity;
+      var collectionChanges, entity, entityId, attributeKey;
       var changes = this.delta.changes;
       for(var collectionKey in changes) {
         collectionChanges = changes[collectionKey];
-        for(var entityId in collectionChanges) {
+        for(entityId in collectionChanges) {
           entity = DeltaHelper.findEntity(this.result[collectionKey], entityId);
-          for(var attributeKey in collectionChanges[entityId]) {
+          for(attributeKey in collectionChanges[entityId]) {
             this.applyChange(entity, attributeKey, collectionChanges[entityId][attributeKey]);
           }
         }
@@ -51,6 +52,28 @@
     },
     applyInsert: function(collectionKey, entity) {
       this.result[collectionKey].push(entity);
+    },
+    applyDeletions: function() {
+      var collectiondeletions;
+      var deletions = this.delta.deletions;
+      for(var collectionKey in deletions) {
+        collectiondeletions = deletions[collectionKey];
+        collectiondeletions.forEach(function(entityId) {
+          this.applyDeletion(collectionKey, entityId);
+        }.bind(this));
+      }
+    },
+    applyDeletion: function(collectionKey, entityId) {
+      var entity;
+      var collection = this.result[collectionKey];
+      for(var i=0; collection.length>i; i++) {
+        entity = collection[i];
+        if(entity.id == entityId) {
+          collection.splice(i, 1);
+          return;
+        }
+      }
+      throw new Error('Could not apply delete.');
     }
   };
 
