@@ -9,7 +9,7 @@
 
   var Encoder = {
     encode: function(message) {
-      var typeCode = Transcoder.types.indexOf(message.type)
+      var typeCode = Transcoder.types.indexOf(message.type);
 
       var buffer = new ArrayBuffer(7);
       var view = new DataView(buffer);

@@ -11,4 +11,17 @@ World.prototype.update = function(timeDelta) {
   });
 };
 
+World.prototype.toHash = function() {
+  var hash = {
+    players: []
+  };
+
+  this.players.forEach(function(player) {
+    var playerHash = player.toHash();
+    hash.players.push(playerHash);
+  });
+
+  return hash;
+};
+
 module.exports = World;

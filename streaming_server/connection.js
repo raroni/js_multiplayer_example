@@ -1,6 +1,7 @@
 var Player = require('../models/player');
 var EventEmitter = require('events').EventEmitter;
 var Transcoder = require('../shared/transcoder');
+var DeltaGenerator = require('../shared/delta_generator');
 
 function Connection(wsConnection, world) {
   EventEmitter.call(this);
@@ -9,9 +10,8 @@ function Connection(wsConnection, world) {
   wsConnection.on('close', this.onClose.bind(this));
   this.wsConnection = wsConnection;
   this.world = world;
-  world.players.forEach(function(player) {
-    this.sendNewPlayerMessage(player);
-  }.bind(this));
+  this.stateNodeId = 1;
+  this.stateNodes = [];
 }
 
 Connection.prototype = Object.create(EventEmitter.prototype);
@@ -26,25 +26,11 @@ Connection.prototype.onMessage = function(messageObject) {
   if(messageObject.type === 'utf8') {
     var messageAsString = messageObject.utf8Data;
     var message = JSON.parse(messageAsString);
-    if(message.type == 'commands')
+    if(message.type === 'commands')
       this.player.commands = this.player.commands.concat(message.commands);
+    else if(message.type === 'stateNodeAcknowledgement')
+      this.onDeltaNodeAcknowledge(message);
   }
-};
-
-Connection.prototype.sendNewPlayerMessage = function(player, you) {
-  if(typeof(you) === 'undefined') you = false;
-  var message = {
-    type: 'newPlayer',
-    you: you,
-    player: {
-      id: player.id,
-      name: player.name,
-      positionX: player.positionX,
-      positionY: player.positionY
-    }
-  };
-
-  this.sendMessage(message);
 };
 
 Connection.prototype.onClose = function(reasonCode, description) {
@@ -65,12 +51,47 @@ Connection.prototype.sendMessage = function(message) {
   this.wsConnection.send(data);
 };
 
-Connection.prototype.sendSnapshot = function(snapshot) {
+Connection.prototype.sendIdentification = function() {
   var message = {
-    type: 'snapshot',
-    snapshot: snapshot
+    type: 'identification',
+    playerId: this.player.id
   };
   this.sendMessage(message);
+  this.identificationSent = true;
+};
+
+Connection.prototype.onDeltaNodeAcknowledge = function(message) {
+  if(!this.identificationSent) this.sendIdentification();
+  while(this.stateNodes[0].id < message.stateNodeId) {
+    this.stateNodes.shift();
+  }
+  this.lastAcknowledgedStateNode = this.stateNodes[0];
+}
+
+Connection.prototype.sendState = function(state) {
+  var lastAcknowledgedState;
+  if(this.lastAcknowledgedStateNode) {
+    lastAcknowledgedState = this.lastAcknowledgedStateNode.state
+  }
+  var delta = DeltaGenerator.generate(lastAcknowledgedState, state);
+  if(delta) {
+    console.log('DELTA!');
+    var stateNode = {
+      state: state,
+      id: this.stateNodeId++
+    };
+
+    var message = {
+      type: 'delta',
+      delta: delta,
+      stateNodeId: stateNode.id,
+    }
+    if(this.lastAcknowledgedStateNode) message.parentStateNodeId = this.lastAcknowledgedStateNode.id;
+
+    console.log('sending', delta);
+    this.sendMessage(message);
+    this.stateNodes.push(stateNode);
+  }
 };
 
 Connection.prototype.sendCommandAcknowledgementMessage = function() {

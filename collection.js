@@ -1,9 +1,9 @@
 var SharedCollection = require('./shared/collection');
 var EventEmitter = require('events').EventEmitter;
 
-function Collection() {
+function Collection(options) {
   EventEmitter.call(this);
-  SharedCollection.call(this);
+  SharedCollection.call(this, options);
   this.idCount = 1;
 }
 

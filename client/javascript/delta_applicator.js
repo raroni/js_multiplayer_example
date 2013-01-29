@@ -51,6 +51,7 @@
       }
     },
     applyInsert: function(collectionKey, entity) {
+      if(!this.result[collectionKey]) this.result[collectionKey] = [];
       this.result[collectionKey].push(entity);
     },
     applyDeletions: function() {

@@ -1,8 +1,8 @@
-function Connection(remotePlayerInterpolators) {
+function Connection() {
   this.socket = new WebSocket('ws://localhost:3000');
   this.socket.binaryType = "arraybuffer";
   this.socket.onmessage = this.onMessage.bind(this);
-  this.remotePlayerInterpolators = remotePlayerInterpolators;
+  this.stateNodes = [];
 }
 
 Connection.prototype = Object.create(EventEmitter);
@@ -12,7 +12,6 @@ Connection.prototype.onMessage = function(messageEvent) {
   this.emit('messageData', messageEvent.data);
   if(messageEvent.data instanceof ArrayBuffer) {
     message = Transcoder.decode(messageEvent.data);
-    console.log(message);
   } else {
     message = JSON.parse(messageEvent.data);
   }
@@ -32,6 +31,7 @@ Connection.prototype.sendMessage = function(message) {
   this.socket.send(messageAsString);
 };
 
+/*
 Connection.prototype.onNewPlayerMessage = function(message) {
   var player = new Player(message.player);
   this.world.players.add(player);
@@ -43,19 +43,55 @@ Connection.prototype.onNewPlayerMessage = function(message) {
     this.remotePlayerInterpolators.add(remotePlayerInterpolator);
   }
 };
+*/
+
+Connection.prototype.onIdentificationMessage = function(message) {
+  this.state.player = this.world.players.find(message.playerId);
+  console.log(this.state.player.name)
+}
+
+Connection.prototype.findStateNode = function(stateNodeId) {
+  var stateNode;
+  for(var i=0; this.stateNodes.length>i; i++) {
+    stateNode = this.stateNodes[i];
+    if(stateNode.id === stateNodeId) return stateNode;
+  }
+  throw new Error("Couldn't find state node.");
+}
+
+Connection.prototype.onDeltaMessage = function(message) {
+  var lastStateNode = this.stateNodes[this.stateNodes.length-1];
+  if(!lastStateNode || message.stateNodeId > lastStateNode.id) {
+    var oldState;
+    if(message.parentStateNodeId) {
+      var oldState = this.findStateNode(message.parentStateNodeId).state;
+    } else {
+      var oldState = {};
+    }
+    var newState = DeltaApplicator.apply(oldState, message.delta);
+    var stateNode = {
+      id: message.stateNodeId,
+      state: newState
+    };
+
+    var delta = DeltaGenerator.generate(lastStateNode ? lastStateNode.state : null, newState);
+
+    this.stateNodes.push(stateNode);
+    this.sendStateNodeAcknowledgement();
+    if(delta) this.stateManager.applyDelta(delta);
+  }
+}
+
+Connection.prototype.sendStateNodeAcknowledgement = function() {
+  var message = {
+    type: 'stateNodeAcknowledgement',
+    stateNodeId: this.stateNodes[this.stateNodes.length-1].id
+  };
+  this.sendMessage(message);
+}
 
 Connection.prototype.onCommandAcknowledgementMessage = function(message) {
   this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
-};
-
-Connection.prototype.onSnapshotMessage = function(message) {
-  var playerData = message.snapshot;
-  playerData.forEach(function(playerData) {
-    if(!this.state.player || playerData.id != this.state.player.id) {
-      var interpolator = this.remotePlayerInterpolators.byId[playerData.id];
-      if(interpolator) interpolator.receive(playerData);
-    }
-  }.bind(this));
 };
 
 Connection.prototype.sendCommands = function(commands) {

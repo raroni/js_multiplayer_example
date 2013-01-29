@@ -1,6 +1,9 @@
-function Collection() {
+function Collection(options) {
   this.list = [];
   this.byId = {};
+  if(options && options.entityConstructor) {
+    this.EntityConstructor = options.entityConstructor;
+  }
 }
 
 Collection.prototype = {
@@ -8,6 +11,10 @@ Collection.prototype = {
     if(!entity.id) throw new Error('Entity must have an ID to be added to collection.');
     this.byId[entity.id] = entity;
     this.list.push(entity);
+  },
+  build: function(hash) {
+    var entity = new this.EntityConstructor(hash);
+    return entity;
   },
   forEach: function(iterator) {
     this.list.forEach(iterator);
@@ -18,6 +25,9 @@ Collection.prototype = {
     if(index == -1 || !this.byId[entity.id]) throw new Error("Couldn't remove entity from collection because it isn't here.");
     delete this.byId[entity.id];
     this.list.splice(index, 1);
+  },
+  find: function(id) {
+    return this.byId[id];
   }
 }
 

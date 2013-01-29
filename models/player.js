@@ -8,15 +8,18 @@ function getName() {
   return names[index];
 }
 
-function Player() {
+function Player(options) {
   this.commands = [];
-  var x = Math.round(Math.random()*100);
-  var y = Math.round(Math.random()*100);
-  var options = {
-    positionX: x,
-    positionY: y,
-    name: getName()
-  };
+  if(!options) options = {};
+
+  if(!options.positionX) {
+    var x = Math.round(Math.random()*100);
+    var y = Math.round(Math.random()*100);
+    options.positionX = x;
+    options.positionY = y;
+  }
+  if(!options.name) options.name = getName();
+
   SharedPlayer.call(this, options);
 }
 
@@ -33,6 +36,16 @@ Player.prototype.applyCommands = function() {
     this.emit('commandApplication');
   }
 };
+
+Player.prototype.toHash = function() {
+  var hash = {
+    id: this.id,
+    name: this.name,
+    positionX: this.positionX,
+    positionY: this.positionY
+  };
+  return hash;
+}
 
 // Mixing in EventEmitter
 for(var propertyName in EventEmitter.prototype)

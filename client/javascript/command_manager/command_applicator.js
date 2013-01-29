@@ -15,5 +15,6 @@ CommandApplicator.prototype = {
     this.player.positionX = state.positionX;
     this.player.positionY = state.positionY;
     this.unacknowledgedCommands.forEach(this.player.applyCommand.bind(this.player));
+    console.log('acked!');
   }
 };

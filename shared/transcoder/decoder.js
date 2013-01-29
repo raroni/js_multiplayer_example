@@ -10,7 +10,6 @@
   var Decoder = {
     decode: function(buffer) {
       var message = {};
-      var string = buffer.toString();
 
       var view = new DataView(buffer);
       var typeCode = view.getUint8(0);
