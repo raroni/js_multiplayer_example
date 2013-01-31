@@ -1,8 +1,13 @@
 (function() {
   var isNode = typeof(exports) !== 'undefined';
-  var Vector2;
-  if(isNode) Vector2 = require('../shared/vector2');
-  else Vector2 = window.Vector2;
+  var Vector2, EventEmitter;
+  if(isNode) {
+    Vector2 = require('./vector2');
+    EventEmitter = require('./event_emitter')
+  } else {
+    Vector2 = window.Vector2;
+    EventEmitter = window.EventEmitter;
+  }
 
   function Player(options) {
     ['id', 'name', 'positionX', 'positionY'].forEach(function(key) {
@@ -10,29 +15,42 @@
     }.bind(this));
   }
 
-  Player.prototype = {
-    applyCommand: function(command) {
-      if(command.left)
-        this.positionX -= 1
+  Player.prototype = Object.create(EventEmitter);
 
-      if(command.right)
-        this.positionX += 1
+  Player.prototype.applyCommand = function(command) {
+    if(command.left)
+      this.setProperty('positionX', this.positionX-1);
 
-      if(command.up)
-        this.positionY -= 1
+    if(command.right)
+      this.setProperty('positionX', this.positionX+1);
 
-      if(command.down)
-        this.positionY += 1
-    },
-    getPosition: function() {
-      var position = new Vector2(this.positionX, this.positionY);
-      return position;
-    },
-    setPosition: function(position) {
-      this.positionX = position.x;
-      this.positionY = position.y;
-    }
+    if(command.up)
+      this.setProperty('positionY', this.positionY-1);
+
+    if(command.down)
+      this.setProperty('positionY', this.positionY+1);
   };
+
+  Player.prototype.getPosition = function() {
+    var position = new Vector2(this.positionX, this.positionY);
+    return position;
+  };
+
+  Player.prototype.setPosition = function(position) {
+    this.positionX = position.x;
+    this.positionY = position.y;
+  };
+
+  Player.prototype.setProperty = function(key, value) {
+    this[key] = value;
+    this.emit('change', key);
+  };
+
+  Player.prototype.set = function(hash) {
+    for(var key in hash) {
+      this.setProperty(key, hash[key]);
+    }
+  }
 
   if(isNode) module.exports = Player;
   else window.Player = Player;

@@ -1,9 +1,44 @@
-* Delta compression
+* Ryd op efter "StateNode"
+* Vi bruger både navnet property og attributes. Vi kan kun bruge ÉN
+* RemotePlayerInterpolator > PlayerInterpolator?
+* Skal world have en #collections property man kan iterere henover? Ville fx gøre World#constructor (server)  og World#toHash pænere
+* ser lidt mærkelig ud (camelcase eller ikke?): this.EntityConstructor = options.entityConstructor;
+* Se på muligheden for at gøre sådan at client og server selv kan bestemme hvordan de vil definere attribute accessor. Serveren vil fx gerne lytte på det (emit) - det vil klienten ikke. Ligenu har klienten nemlig (uden grund) setProperty :-(
+* Lidt mærkeligt at world ligger inde i models? Og at alle PÅNÆR world er mere en "entity" end en model?
+* Broadcaster burde måske bruge serverens tick og ikke sin egen setInterval?
 * Flyt alt hvad der kan flyttes fra Client over i StateManager
 * Lobby system with start/join game
 * Trees
+* Leg med idéen om hvorvidt man skal undlade at udsende en player egen update position i update (den kommer alligevel via commandAck)
 * Boundaries
 * Transcoder skal ikke hedde transcoder. Måske NetworkCompressor?
 * Would be awesome to be able to use player.position= instead of player.setPosition (via Object.defineProperty)
 * Overfvej at rename vores Applicators til Appliers
 * Mulig bug: DeltaGenerator fejler hvis oldState indeholder "collectionX" og newState ikke gør (så bør alle medlemmer af collectionX oprettes som deletion)
+
+
+
+
+Idé: Vi skifter fra delta til event-baseret?
+
+Der er ikke andet end problemer med delta-komprimeringen. Og det betyder en masse arbejde både på server og klient - og det er endda FØR
+vi er gået igang med selve simuleringen. Og hvad er det égentlig vi sparer (i forhold til nedenstående)? Måske kan vi sende enkelt bytes per koordinat per opdatering i stedet for to. Men det svarer til to bytes sparet per opdatering per spiller. Og med max 4-8 spillere online så er det max 16 bytes per opdatering man sparer - det er 160 bytes i sekundet. Det er ikke det værd.
+
+Det batter altså ikke i forhold til alt det arbejde jeg og server/klient skal lave.
+
+Hvad med en simplere event-baseret approach?
+
+Vi har en eller anden form for StateChangeBuffer som lytter på alle collections. Den lytter efter insert/delete/update. Og alle collections
+lytter ligeledes på deres modeller.
+
+Én gang imellem (10 gange i sekundet) kan vi så tømme denne buffer og distribuere det ud til klienterne.
+
+Meget simplere.
+
+Serveren skal i stedet kun kunne sende:
+
+welcome (inkl. snapshot og eget player id)
+entityInserts: arrays.
+entityDeletions: arrays
+entityUpdates: arrays
+Dejligt nemt.

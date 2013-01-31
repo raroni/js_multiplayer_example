@@ -11,6 +11,10 @@ Vector2.prototype = {
     );
     return vector;
   },
+  clone: function() {
+    var vector = new Vector2(this.x, this.y);
+    return vector;
+  },
   subtract: function(vector) {
     var vector = new Vector2(
       this.x - vector.x,
@@ -28,10 +32,6 @@ Vector2.prototype = {
   length: function() {
     var squareSum = Math.pow(this.x, 2) + Math.pow(this.y, 2);
     return Math.sqrt(squareSum);
-  },
-  duplicate: function() {
-    var duplicate = new Vector2(this.x, this.y);
-    return duplicate;
   },
   toJSON: function() {
     var object = {

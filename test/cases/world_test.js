@@ -27,4 +27,51 @@ WorldTest.prototype['test to hash'] = function() {
   this.assertDeepEqual(expected, hash);
 };
 
+WorldTest.prototype['test addEntity event'] = function() {
+  var player = new Player({ id: 1, name: 'Rasmus', age: 26 });
+  var world = new World();
+  var callbackEntity, callbackCollectionKey;
+  world.on('addEntity', function(entity, collectionName) {
+    callbackEntity = entity;
+    callbackCollectionKey = collectionName;
+  });
+  world.players.add(player);
+
+  this.assertEqual(player, callbackEntity);
+  this.assertEqual('players', callbackCollectionKey);
+}
+
+WorldTest.prototype['test removeEntity event'] = function() {
+  var player = new Player({ id: 1, name: 'Rasmus', age: 26 });
+  var world = new World();
+  world.players.add(player);
+  var callbackEntity, callbackCollectionKey;
+  world.on('removeEntity', function(entity, collectionName) {
+    callbackEntity = entity;
+    callbackCollectionKey = collectionName;
+  });
+  world.players.remove(player);
+
+  this.assertEqual(player, callbackEntity);
+  this.assertEqual('players', callbackCollectionKey);
+}
+
+WorldTest.prototype['test changeEntity event'] = function() {
+  var player = new Player({ id: 1, name: 'Rasmus', age: 26 });
+  var world = new World();
+  world.players.add(player);
+  var callbackEntity, callbackAttribute, callbackCollectionKey;
+  world.on('changeEntity', function(entity, attribute, collectionName) {
+    callbackEntity = entity;
+    callbackAttribute = attribute;
+    callbackCollectionKey = collectionName;
+  });
+  player.setProperty('name', 'Sumsar');
+
+  this.assertEqual(player, callbackEntity);
+  this.assertEqual('name', callbackAttribute);
+  this.assertEqual('players', callbackCollectionKey);
+}
+
+
 module.exports = WorldTest;

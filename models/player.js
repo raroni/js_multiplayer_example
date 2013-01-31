@@ -1,5 +1,4 @@
 var SharedPlayer = require('../shared/player');
-var EventEmitter = require('events').EventEmitter;
 
 var names = ['Rasmus', 'John', 'Pelle', 'Christina', 'Bongface', 'Mongelis', 'BongoJohn'];
 
@@ -46,9 +45,5 @@ Player.prototype.toHash = function() {
   };
   return hash;
 }
-
-// Mixing in EventEmitter
-for(var propertyName in EventEmitter.prototype)
-  Player.prototype[propertyName] = EventEmitter.prototype[propertyName];
 
 module.exports = Player;

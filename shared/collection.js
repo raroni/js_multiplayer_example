@@ -1,9 +1,6 @@
 function Collection(options) {
   this.list = [];
   this.byId = {};
-  if(options && options.entityConstructor) {
-    this.EntityConstructor = options.entityConstructor;
-  }
 }
 
 Collection.prototype = {
@@ -11,10 +8,6 @@ Collection.prototype = {
     if(!entity.id) throw new Error('Entity must have an ID to be added to collection.');
     this.byId[entity.id] = entity;
     this.list.push(entity);
-  },
-  build: function(hash) {
-    var entity = new this.EntityConstructor(hash);
-    return entity;
   },
   forEach: function(iterator) {
     this.list.forEach(iterator);

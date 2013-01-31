@@ -1,22 +1,30 @@
 (function() {
   var isNode = typeof(exports) !== 'undefined';
-  var Collection, Player;
+  var EntityCollection, Player, EventEmitter;
   if(isNode) {
-    Collection = require('../collection');
-    Player = require('../models/player');
+    EntityCollection = require('../shared/entity_collection');
+    Player = require('./player');
+    EventEmitter = require('../shared/event_emitter');
   } else {
-    Collection = window.Collection;
+    EntityCollection = window.EntityCollection;
     Player = window.Player;
+    EventEmitter = window.EventEmitter;
   }
 
   function World() {
-    this.players = new Collection({ entityConstructor: Player });
+    this.collectionNames.forEach(function(collectionName) {
+      var collectionOptions = {
+        name: collectionName,
+        entityConstructor: this.entityConstructors[collectionName]
+      };
+      this[collectionName] = new EntityCollection(collectionOptions);
+    }.bind(this));
   }
 
-  World.prototype = {
+  World.prototype = Object.create(EventEmitter);
 
-  };
+  World.prototype.collectionNames = ['players'];
 
   if(isNode) module.exports = World;
-  else window.World = World;
+  else window.SharedWorld = World;
 })();

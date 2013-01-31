@@ -12,11 +12,15 @@ RemotePlayerInterpolator.prototype = {
       this.progress = Math.min(1, this.progress);
       var newPosition = this.oldPosition.add(this.newPosition.subtract(this.oldPosition).multiply(this.progress));
       this.player.setPosition(newPosition);
+    } else {
     }
   },
-  receive: function(positionChange) {
+  receive: function(coordinates) {
     this.progress = 0;
     this.oldPosition = this.newPosition;
-    this.newPosition = this.newPosition.add(positionChange);
+    this.newPosition = this.oldPosition.clone();
+    for(var axis in coordinates) {
+      this.newPosition[axis] = coordinates[axis];
+    }
   }
 };

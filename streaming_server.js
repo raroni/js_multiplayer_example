@@ -21,7 +21,6 @@ StreamingServer.prototype = {
       this.onClose(connection);
     }.bind(this));
     this.connections.push(connection);
-    connection.createPlayer();
   },
   onClose: function(connection) {
     var index = this.connections.indexOf(connection);

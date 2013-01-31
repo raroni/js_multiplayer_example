@@ -12,7 +12,11 @@ Collection.prototype = Object.create(SharedCollection.prototype);
 Collection.prototype.add = function(entity) {
   entity.id = this.idCount++;
   SharedCollection.prototype.add.call(this, entity);
-  this.emit('new', entity);
+  this.emit('add', entity);
+  entity.on('change', function(attribute) {
+    this.emit('change', entity, attribute);
+  }.bind(this));
+
 };
 
 Collection.prototype.remove = function(entity) {

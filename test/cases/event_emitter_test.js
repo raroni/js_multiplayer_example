@@ -1,4 +1,14 @@
 (function() {
+  var isNode = typeof(exports) !== 'undefined';
+  var Snitch, EventEmitter;
+  if(isNode) {
+    Snitch = require('snitch');
+    EventEmitter = require('../../shared/event_emitter');
+  } else {
+    Snitch = window.Snitch;
+    EventEmitter = window.EventEmitter;
+  }
+
   function Dummy() {}
   Dummy.prototype = Object.create(EventEmitter);
 
@@ -28,5 +38,6 @@
     this.assertEqual('hi there', valueFromCallback);
   };
 
-  window.EventEmitterTest = EventEmitterTest;
+  if(isNode) module.exports = EventEmitterTest;
+  else window.EventEmitterTest = EventEmitterTest;
 })();

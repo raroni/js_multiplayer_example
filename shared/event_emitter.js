@@ -22,3 +22,5 @@ var EventEmitter = {
     }
   }
 };
+
+if(typeof(exports) !== 'undefined') module.exports = EventEmitter;

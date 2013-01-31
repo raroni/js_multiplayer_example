@@ -17,6 +17,7 @@ Connection.prototype.onMessage = function(messageEvent) {
   }
   this.emit('message', message);
   if(!message.type) throw new Error('Message from server had no type.');
+  console.log('New message: ', message.type);
   var type = message.type;
   var methodName = 'on' + type.charAt(0).toUpperCase() + type.slice(1) + 'Message';
   if(this[methodName]) {
@@ -45,11 +46,6 @@ Connection.prototype.onNewPlayerMessage = function(message) {
 };
 */
 
-Connection.prototype.onIdentificationMessage = function(message) {
-  this.state.player = this.world.players.find(message.playerId);
-  console.log(this.state.player.name)
-}
-
 Connection.prototype.findStateNode = function(stateNodeId) {
   var stateNode;
   for(var i=0; this.stateNodes.length>i; i++) {
@@ -57,30 +53,19 @@ Connection.prototype.findStateNode = function(stateNodeId) {
     if(stateNode.id === stateNodeId) return stateNode;
   }
   throw new Error("Couldn't find state node.");
-}
+};
 
-Connection.prototype.onDeltaMessage = function(message) {
-  var lastStateNode = this.stateNodes[this.stateNodes.length-1];
-  if(!lastStateNode || message.stateNodeId > lastStateNode.id) {
-    var oldState;
-    if(message.parentStateNodeId) {
-      var oldState = this.findStateNode(message.parentStateNodeId).state;
-    } else {
-      var oldState = {};
-    }
-    var newState = DeltaApplicator.apply(oldState, message.delta);
-    var stateNode = {
-      id: message.stateNodeId,
-      state: newState
-    };
+Connection.prototype.onWelcomeMessage = function(message) {
+  var snapshot = message.snapshot, collection;
+  this.stateManager.playerId = message.playerId;
+  this.stateManager.applySnapshot(snapshot);
+  this.state.player = this.world.players.find(message.playerId);
+  this.stateManager.player = this.state.player;
+};
 
-    var delta = DeltaGenerator.generate(lastStateNode ? lastStateNode.state : null, newState);
-
-    this.stateNodes.push(stateNode);
-    this.sendStateNodeAcknowledgement();
-    if(delta) this.stateManager.applyDelta(delta);
-  }
-}
+Connection.prototype.onUpdateMessage = function(message) {
+  this.stateManager.applyUpdate(message.update);
+};
 
 Connection.prototype.sendStateNodeAcknowledgement = function() {
   var message = {
@@ -91,7 +76,8 @@ Connection.prototype.sendStateNodeAcknowledgement = function() {
 }
 
 Connection.prototype.onCommandAcknowledgementMessage = function(message) {
-  this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
+  // temporarily disabled
+  //this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
 };
 
 Connection.prototype.sendCommands = function(commands) {
