@@ -1,19 +1,19 @@
-function CommandApplicator(player) {
+function CommandApplicator(state) {
   this.unacknowledgedCommands = [];
-  this.player = player;
+  this.state = state;
 }
 
 CommandApplicator.prototype = {
   add: function(command) {
     this.unacknowledgedCommands.push(command);
-    this.player.applyCommand(command);
+    this.state.player.applyCommand(command);
   },
   acknowledgeCommands: function(state, lastAcknowledCommandId) {
     while(this.unacknowledgedCommands.length && this.unacknowledgedCommands[0].id <= lastAcknowledCommandId)
       this.unacknowledgedCommands.shift();
 
-    this.player.positionX = state.positionX;
-    this.player.positionY = state.positionY;
-    this.unacknowledgedCommands.forEach(this.player.applyCommand.bind(this.player));
+    this.state.player.positionX = state.positionX;
+    this.state.player.positionY = state.positionY;
+    this.unacknowledgedCommands.forEach(this.state.player.applyCommand.bind(this.state.player));
   }
 };

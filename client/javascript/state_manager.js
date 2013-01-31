@@ -1,7 +1,6 @@
-function StateManager(world, commandManager) {
+function StateManager(world) {
   this.world = world;
   this.remotePlayerInterpolators = new Collection;
-  this.commandManager = commandManager;
 }
 
 StateManager.prototype = {

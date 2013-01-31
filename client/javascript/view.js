@@ -24,8 +24,8 @@ View.prototype = {
     }.bind(this));
 
     var text = 'Incoming network: ';
-    if(this.state.networkAnalyzer.rate) {
-      text += Math.round(this.state.networkAnalyzer.rate) + 'b/s';
+    if(typeof(this.state.network.rate) !== 'undefined') {
+      text += Math.round(this.state.network.rate) + 'b/s';
     } else {
       text += 'N/A';
     }

@@ -1,19 +1,18 @@
-function CommandManager(keyboard, connection) {
+function CommandManager(keyboard, connection, state) {
   this.connection = connection;
   this.keyboard = keyboard;
   this.nextId = 1;
+  this.state = state;
+  this.dispatcher = new CommandDispatcher(connection);
+  this.applicator = new CommandApplicator(state);
 }
 
 CommandManager.prototype = {
-  start: function(player) {
-    this.dispatcher = new CommandDispatcher(this.connection);
-    this.applicator = new CommandApplicator(player);
-    this.connection.commandApplicator = this.applicator;
-    this.started = true;
-  },
   update: function(timeDelta) {
+    if(this.state.player) this.check(timeDelta);
+  },
+  check: function(timeDelta) {
     var command = this.queryCommand(timeDelta);
-
     if(command) {
       this.dispatcher.add(command);
       this.applicator.add(command);
@@ -35,5 +34,8 @@ CommandManager.prototype = {
       })
       return command;
     }
+  },
+  acknowledgeCommands: function(state, lastAcknowledgedCommandId) {
+    this.applicator.acknowledgeCommands(state, lastAcknowledgedCommandId);
   }
 };

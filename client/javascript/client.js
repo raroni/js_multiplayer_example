@@ -1,27 +1,20 @@
 function Client(document) {
-  this.connection = new Connection();
-  this.networkAnalyzer = new NetworkAnalyzer(this.connection);
   var world = new World;
+  var keyboard = new Keyboard(document);
+  this.stateManager = new StateManager(world);
+  var connection = new Connection();
+  this.networkAnalyzer = new NetworkAnalyzer(connection);
 
-  this.state = {
+  var state = {
     world: world,
-    networkAnalyzer: this.networkAnalyzer
+    network: this.networkAnalyzer
   };
 
+  this.commandManager = new CommandManager(keyboard, connection, state);
+  var controller = new Controller(state, this.stateManager, this.commandManager);
 
-  var keyboard = new Keyboard(document);
-  this.commandManager = new CommandManager(keyboard, this.connection, this.state);
-
-  this.stateManager = new StateManager(world, this.commandManager);
-
-  /* THIS IS VERY UGLY AND SHOULD BE REMOVED WHEN CONTROLLER HAS BEEN MADE */
-  this.connection.state = this.state;
-  this.connection.world = world;
-  this.connection.stateManager = this.stateManager;
-  /* ***********************************************************************/
-
-  this.view = new View(this.state, document);
-
+  connection.controller = controller;
+  this.view = new View(state, document);
 }
 
 Client.prototype = {
@@ -29,16 +22,9 @@ Client.prototype = {
     this.scheduleNextTick();
   },
   update: function(timeDelta) {
-    // should probably be replaced with a event driven approach?
-    if(this.state.player && !this.commandManager.started) {
-      this.stateManager.player = this.state.player;
-      this.commandManager.start(this.state.player);
-    }
-
-    if(this.commandManager.started) this.commandManager.update(timeDelta);
+    this.commandManager.update(timeDelta);
     this.networkAnalyzer.update(timeDelta);
     this.stateManager.update(timeDelta);
-
     this.view.update(timeDelta);
   },
   tick: function(timestamp) {
