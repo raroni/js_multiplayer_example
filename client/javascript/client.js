@@ -2,7 +2,7 @@ function Client(document) {
   var world = new World;
   var keyboard = new Keyboard(document);
   this.stateManager = new StateManager(world);
-  var connection = new Connection();
+  var connection = new Connection(document.location.host);
   this.networkAnalyzer = new NetworkAnalyzer(connection);
 
   var state = {

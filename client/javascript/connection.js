@@ -1,8 +1,7 @@
-function Connection(controller) {
-  this.socket = new WebSocket('ws://localhost:3000');
+function Connection(host) {
+  this.socket = new WebSocket('ws://' + host);
   this.socket.binaryType = "arraybuffer";
   this.socket.onmessage = this.onMessage.bind(this);
-  this.controller = controller;
 }
 
 Connection.prototype = Object.create(EventEmitter);
