@@ -2,7 +2,6 @@ function Connection() {
   this.socket = new WebSocket('ws://localhost:3000');
   this.socket.binaryType = "arraybuffer";
   this.socket.onmessage = this.onMessage.bind(this);
-  this.stateNodes = [];
 }
 
 Connection.prototype = Object.create(EventEmitter);
@@ -32,15 +31,6 @@ Connection.prototype.sendMessage = function(message) {
   this.socket.send(messageAsString);
 };
 
-Connection.prototype.findStateNode = function(stateNodeId) {
-  var stateNode;
-  for(var i=0; this.stateNodes.length>i; i++) {
-    stateNode = this.stateNodes[i];
-    if(stateNode.id === stateNodeId) return stateNode;
-  }
-  throw new Error("Couldn't find state node.");
-};
-
 Connection.prototype.onWelcomeMessage = function(message) {
   var snapshot = message.snapshot, collection;
   this.stateManager.playerId = message.playerId;
@@ -52,14 +42,6 @@ Connection.prototype.onWelcomeMessage = function(message) {
 Connection.prototype.onUpdateMessage = function(message) {
   this.stateManager.applyUpdate(message.update);
 };
-
-Connection.prototype.sendStateNodeAcknowledgement = function() {
-  var message = {
-    type: 'stateNodeAcknowledgement',
-    stateNodeId: this.stateNodes[this.stateNodes.length-1].id
-  };
-  this.sendMessage(message);
-}
 
 Connection.prototype.onCommandAcknowledgementMessage = function(message) {
   this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);

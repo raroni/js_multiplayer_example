@@ -9,8 +9,6 @@ function Connection(wsConnection, world) {
   wsConnection.on('close', this.onClose.bind(this));
   this.wsConnection = wsConnection;
   this.world = world;
-  this.stateNodeId = 1;
-  this.stateNodes = [];
   this.createPlayer();
 }
 
@@ -28,8 +26,6 @@ Connection.prototype.onMessage = function(messageObject) {
     var message = JSON.parse(messageAsString);
     if(message.type === 'commands')
       this.player.commands = this.player.commands.concat(message.commands);
-    else if(message.type === 'stateNodeAcknowledgement')
-      this.onDeltaNodeAcknowledge(message);
   }
 };
 

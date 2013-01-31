@@ -1,4 +1,3 @@
-* Ryd op efter "StateNode"
 * Vi bruger både navnet property og attributes. Vi kan kun bruge ÉN
 * RemotePlayerInterpolator > PlayerInterpolator?
 * Skal world have en #collections property man kan iterere henover? Ville fx gøre World#constructor (server)  og World#toHash pænere
