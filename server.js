@@ -1,7 +1,7 @@
 var StaticServer = require('node-static').Server;
 var http = require('http');
 var StreamingServer = require('./streaming_server');
-var World = require('./models/World');
+var World = require('./models/world');
 var Broadcaster = require('./broadcaster');
 var SnitchServer = require('snitch').Server;
 
