@@ -55,11 +55,3 @@ Connection.prototype.sendCommands = function(commands) {
 
   this.sendMessage(message);
 };
-
-Connection.prototype.onRemovePlayerMessage = function(message) {
-  var player = this.world.players.byId[message.playerId];
-  this.world.players.remove(player);
-
-  var interpolator = this.remotePlayerInterpolators.byId[message.playerId];
-  this.remotePlayerInterpolators.remove(interpolator);
-};
