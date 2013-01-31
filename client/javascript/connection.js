@@ -62,8 +62,7 @@ Connection.prototype.sendStateNodeAcknowledgement = function() {
 }
 
 Connection.prototype.onCommandAcknowledgementMessage = function(message) {
-  // temporarily disabled
-  //this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
+  this.commandApplicator.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
 };
 
 Connection.prototype.sendCommands = function(commands) {
