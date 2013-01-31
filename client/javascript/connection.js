@@ -32,20 +32,6 @@ Connection.prototype.sendMessage = function(message) {
   this.socket.send(messageAsString);
 };
 
-/*
-Connection.prototype.onNewPlayerMessage = function(message) {
-  var player = new Player(message.player);
-  this.world.players.add(player);
-  if(message.you) {
-    this.state.player = player;
-  } else {
-    var remotePlayerInterpolator = new RemotePlayerInterpolator(player);
-    remotePlayerInterpolator.id = player.id;
-    this.remotePlayerInterpolators.add(remotePlayerInterpolator);
-  }
-};
-*/
-
 Connection.prototype.findStateNode = function(stateNodeId) {
   var stateNode;
   for(var i=0; this.stateNodes.length>i; i++) {
