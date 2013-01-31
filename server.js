@@ -3,7 +3,11 @@ var http = require('http');
 var StreamingServer = require('./streaming_server');
 var World = require('./models/world');
 var Broadcaster = require('./broadcaster');
-var SnitchServer = require('snitch').Server;
+
+var environment = process.env.PORT ? 'production' : 'development';
+
+var SnitchServer
+if(environment === 'development') SnitchServer = require('snitch').Server;
 
 var sharedJavascriptPathMatcher = /^\/javascript\/shared\//;
 var testPathMatcher = /^\/test/;
@@ -13,7 +17,7 @@ function Server() {
 
   this.clientFilesServer = new StaticServer('./client');
   this.sharedFilesServer = new StaticServer('./shared');
-  this.testFilesServer = new StaticServer('./test');
+  if(environment === 'development') this.testFilesServer = new StaticServer('./test');
 
   this.httpServer = http.createServer(this.request.bind(this));
   var streamingServer = new StreamingServer(this.httpServer, this.world);
@@ -41,7 +45,7 @@ Server.prototype = {
       request.url = '/' + request.url.replace(sharedJavascriptPathMatcher, '');
       this.sharedFilesServer.serve(request, response);
     }
-    else if(request.url.match(testPathMatcher)) {
+    else if(environment === 'development' && request.url.match(testPathMatcher)) {
       if(request.url == '/test/snitch.js') {
         SnitchServer.serve(response);
       } else {
