@@ -18,7 +18,6 @@ function Server() {
   this.httpServer = http.createServer(this.request.bind(this));
   var streamingServer = new StreamingServer(this.httpServer, this.world);
   this.broadcaster = new Broadcaster(this.world, streamingServer);
-
 }
 
 Server.prototype = {
