@@ -17,7 +17,6 @@ Connection.prototype.onMessage = function(messageEvent) {
   }
   this.emit('message', message);
   if(!message.type) throw new Error('Message from server had no type.');
-  console.log('New message: ', message.type);
   var type = message.type;
   var methodName = 'on' + type.charAt(0).toUpperCase() + type.slice(1) + 'Message';
   if(this.controller[methodName]) {
