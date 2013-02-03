@@ -9,13 +9,10 @@
 * Flyt alt hvad der kan flyttes fra Client over i StateManager
 * Lobby system with start/join game
 * Trees
-* Leg med idéen om hvorvidt man skal undlade at udsende en player egen update position i update (den kommer alligevel via commandAck)
 * Boundaries
 * Transcoder skal ikke hedde transcoder. Måske NetworkCompressor?
 * Would be awesome to be able to use player.position= instead of player.setPosition (via Object.defineProperty)
 * Overfvej at rename vores Applicators til Appliers
-* Mulig bug: DeltaGenerator fejler hvis oldState indeholder "collectionX" og newState ikke gør (så bør alle medlemmer af collectionX oprettes som deletion)
-
 
 
 
