@@ -29,10 +29,7 @@
     var decodedMessage = Transcoder.decode(encodedMessage);
 
     this.assertEqual(7, encodedMessage.byteLength);
-    this.assertEqual(originalMessage.type, decodedMessage.type);
-    this.assertEqual(originalMessage.state.positionX, decodedMessage.state.positionX);
-    this.assertEqual(originalMessage.state.positionY, decodedMessage.state.positionY);
-    this.assertEqual(originalMessage.lastAcknowledgedCommandId, decodedMessage.lastAcknowledgedCommandId);
+    this.assertDeepEqual(originalMessage, decodedMessage);
   };
 
   if(isNode) module.exports = TranscoderTest;
