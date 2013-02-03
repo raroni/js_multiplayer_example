@@ -5,6 +5,7 @@
 * Se på muligheden for at gøre sådan at client og server selv kan bestemme hvordan de vil definere attribute accessor. Serveren vil fx gerne lytte på det (emit) - det vil klienten ikke. Ligenu har klienten nemlig (uden grund) setProperty :-(
 * Lidt mærkeligt at world ligger inde i models? Og at alle PÅNÆR world er mere en "entity" end en model?
 * Broadcaster burde måske bruge serverens tick og ikke sin egen setInterval?
+* StateManager er et træls navn når vi nu også har state (som den jo netop ikke manager'er) - måske noget med WorldProxy?
 * Flyt alt hvad der kan flyttes fra Client over i StateManager
 * Lobby system with start/join game
 * Trees

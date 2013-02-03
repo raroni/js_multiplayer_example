@@ -74,7 +74,7 @@ StateManager.prototype = {
         player.setProperty(attribute, changes[attribute]);
       }
     }
-    if(player != this.player && (changes.positionX || changes.positionY)) {
+    if(changes.positionX || changes.positionY) {
       var newCoordinates = {};
       if(changes.positionX) newCoordinates.x = changes.positionX;
       if(changes.positionY) newCoordinates.y = changes.positionY;

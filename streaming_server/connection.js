@@ -38,9 +38,16 @@ Connection.prototype.onUpdate = function(update) {
 }
 
 Connection.prototype.sendUpdate = function(update) {
+  var updateCopy = JSON.parse(JSON.stringify(update));
+  if(updateCopy.changes && updateCopy.changes.players && updateCopy.changes.players[this.player.id]) {
+    delete updateCopy.changes.players[this.player.id];
+    if(Object.keys(updateCopy.changes.players).length == 0 && Object.keys(updateCopy.changes).length == 1 && Object.keys(update).length == 1) {
+      return;
+    }
+  }
   var message = {
     type: 'update',
-    update: update
+    update: updateCopy
   };
   this.sendMessage(message);
 };
