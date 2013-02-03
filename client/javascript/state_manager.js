@@ -5,7 +5,6 @@ function StateManager(world) {
 
 StateManager.prototype = {
   applySnapshot: function(snapshot) {
-    console.log('applying snapshot');
     var collection, collectionData, entity;
     for(var collectionName in snapshot) {
       collectionData = snapshot[collectionName];
@@ -15,12 +14,6 @@ StateManager.prototype = {
         this.addEntity(entity, collection);
       }.bind(this));
     }
-    console.log('done');
-  },
-  applyUpdate: function(update) {
-    if(update.changes) this.applyChanges(update.changes);
-    if(update.adds) this.applyAdds(update.adds);
-    if(update.removes) this.applyRemoves(update.removes);
   },
   applyAdds: function(adds) {
     var collectionName, collectionChanges, collection;

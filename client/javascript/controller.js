@@ -16,7 +16,13 @@ Controller.prototype = {
   onCommandAcknowledgementMessage: function(message) {
     this.commandManager.acknowledgeCommands(message.state, message.lastAcknowledgedCommandId);
   },
-  onUpdateMessage: function(message) {
-    this.stateManager.applyUpdate(message.update);
+  onChangesMessage: function(message) {
+    this.stateManager.applyChanges(message.changes);
+  },
+  onRemovesMessage: function(message) {
+    this.stateManager.applyRemoves(message.removes);
+  },
+  onAddsMessage: function(message) {
+    this.stateManager.applyAdds(message.adds);
   }
 };

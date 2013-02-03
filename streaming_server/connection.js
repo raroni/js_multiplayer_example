@@ -38,16 +38,38 @@ Connection.prototype.onUpdate = function(update) {
 }
 
 Connection.prototype.sendUpdate = function(update) {
-  var updateCopy = JSON.parse(JSON.stringify(update));
-  if(updateCopy.changes && updateCopy.changes.players && updateCopy.changes.players[this.player.id]) {
-    delete updateCopy.changes.players[this.player.id];
-    if(Object.keys(updateCopy.changes.players).length == 0 && Object.keys(updateCopy.changes).length == 1 && Object.keys(update).length == 1) {
+  if(update.changes) this.sendChanges(update.changes);
+  if(update.adds) this.sendAdds(update.adds);
+  if(update.removes) this.sendRemoves(update.removes);
+};
+
+Connection.prototype.sendChanges = function(changes) {
+  var changesCopy = JSON.parse(JSON.stringify(changes));
+  if(changesCopy.players && changesCopy.players[this.player.id]) {
+    delete changesCopy.players[this.player.id];
+    if(Object.keys(changesCopy.players).length == 0 && Object.keys(changesCopy).length == 1) {
       return;
     }
   }
   var message = {
-    type: 'update',
-    update: updateCopy
+    type: 'changes',
+    changes: changesCopy
+  };
+  this.sendMessage(message);
+};
+
+Connection.prototype.sendAdds = function(adds) {
+  var message = {
+    type: 'adds',
+    adds: adds
+  };
+  this.sendMessage(message);
+};
+
+Connection.prototype.sendRemoves = function(removes) {
+  var message = {
+    type: 'removes',
+    removes: removes
   };
   this.sendMessage(message);
 };
