@@ -12,14 +12,14 @@
     if(!options) throw new Error('EntityCollection did not get any options');
     if(!options.entityConstructor) throw new Error('EntityCollection did not get a entity constructor.');
     if(!options.name) throw new Error('EntityCollection did not get a name.');
-    this.EntityConstructor = options.entityConstructor;
+    this.entityConstructor = options.entityConstructor;
     this.name = options.name;
   }
 
   EntityCollection.prototype = Object.create(Collection.prototype);
 
   EntityCollection.prototype.build = function(hash) {
-    var entity = new this.EntityConstructor(hash);
+    var entity = new this.entityConstructor(hash);
     return entity;
   };
 

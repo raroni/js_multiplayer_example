@@ -1,14 +1,21 @@
+* REFACTOR TRANSCODERS - de skal i hver deres fil sådan at vi kan loade de relevante i hvert miljø (server/client) - sikr at World kun bliver laodet i AddsEncoder
+* Håndterer strenge i changes messages
+* Det stinker at både BufferBuilder og Transcoder ved noget om hvor stor uint8 og 16 er.
 * Vi bruger både navnet property og attributes. Vi kan kun bruge ÉN
+* Split alle decoder/encoder klasser ud i egne filer.
+* adds/changes messages skal understøtte strenge (fx player name) - TEST FIRST - måske bare modificer de eksisterende tests så de også har strenge
+* Lav tests på change/remove/add message som berører mere end én collection
+* Måske skal vi til at bruge attributeName i stedet for bare attribute? Det driller lidt når man taler om en attribute i forb. med transcoder (hvor attribute ikke kun har et navn - men også størrelse)
 * RemotePlayerInterpolator > PlayerInterpolator?
 * Skal world have en #collections property man kan iterere henover? Ville fx gøre World#constructor (server)  og World#toHash pænere
-* ser lidt mærkelig ud (camelcase eller ikke?): this.EntityConstructor = options.entityConstructor;
 * Se på muligheden for at gøre sådan at client og server selv kan bestemme hvordan de vil definere attribute accessor. Serveren vil fx gerne lytte på det (emit) - det vil klienten ikke. Ligenu har klienten nemlig (uden grund) setProperty :-(
 * Lidt mærkeligt at world ligger inde i models? Og at alle PÅNÆR world er mere en "entity" end en model?
 * Broadcaster burde måske bruge serverens tick og ikke sin egen setInterval?
 * StateManager er et træls navn når vi nu også har state (som den jo netop ikke manager'er) - måske noget med WorldProxy?
 * Flyt alt hvad der kan flyttes fra Client over i StateManager
 * Lobby system with start/join game
-* Trees
+* Vi skal sikre, at der ikke bliver tildelt entity-id'er over 2byte. Man kunne fx lave et system der fandt "frie" id'er (så den ikke altid bare inkrementerede).
+* Skal vi have sten med? Hvis ja, så find på et nyt collectionName der dækker trees og sten - og så implementer det. Kunne være sjovt at se om det virker mede flere collections.
 * Boundaries
 * Transcoder skal ikke hedde transcoder. Måske NetworkCompressor?
 * Would be awesome to be able to use player.position= instead of player.setPosition (via Object.defineProperty)

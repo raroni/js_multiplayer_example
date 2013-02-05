@@ -73,5 +73,4 @@ WorldTest.prototype['test changeEntity event'] = function() {
   this.assertEqual('players', callbackCollectionKey);
 }
 
-
 module.exports = WorldTest;

@@ -3,7 +3,7 @@ var SharedPlayer = require('../shared/player');
 var names = ['Rasmus', 'John', 'Pelle', 'Christina', 'Bongface', 'Mongelis', 'BongoJohn'];
 
 function getName() {
-  var index = Math.round(Math.random()*names.length-2);
+  var index = Math.floor(Math.random()*names.length);
   return names[index];
 }
 

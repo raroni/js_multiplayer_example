@@ -10,7 +10,7 @@
   }
 
   function Player(options) {
-    ['id', 'name', 'positionX', 'positionY'].forEach(function(key) {
+    this.attributeNames.forEach(function(key) {
       if(options[key]) this[key] = options[key];
     }.bind(this));
   }
@@ -51,6 +51,8 @@
       this.setProperty(key, hash[key]);
     }
   }
+
+  Player.prototype.attributeNames = ['id', 'name', 'positionX', 'positionY'];
 
   if(isNode) module.exports = Player;
   else window.Player = Player;

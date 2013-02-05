@@ -23,6 +23,12 @@
 
   World.prototype = Object.create(EventEmitter);
 
+  World.prototype.getEntityConstructor = function(collectionName) {
+    var constructor = this.entityConstructors[collectionName];
+    if(!constructor) throw new Error('Could not find entity constructor from collection name "' + collectionName + '".');
+    return constructor;
+  };
+
   World.prototype.collectionNames = ['players'];
 
   if(isNode) module.exports = World;
